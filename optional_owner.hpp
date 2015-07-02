@@ -36,7 +36,8 @@ public:
   const T& get() const { assert(_access); return *_access; }
   T& get() { assert(_access); return *_access; }
   
-  bool owes() const { return _ownership != nullptr; }
+  // precondition: *this has not been moved from
+  bool owes() const { assert(_access); return _ownership != nullptr; }
 };
 
 } // namespace ak_toolbox
