@@ -16,13 +16,15 @@ This is a single-header, header-only library. It requires the C++ compiler taht 
 
 ## Overview
 
-Class template `optional_owner` has no default constructor. You initialize it by either providing a reference or a `unique_ptr`. In the former case the `optional_owner` doesn't own the resource: it is just like a raw pointer or a reference. In the latter case, it does own the pointer, and will call the appropriate deleter when its life-time ends.
+Class template `optional_owner` has no default constructor. You initialize it by either providing a reference or a `std::unique_ptr`. In the former case the `optional_owner` doesn't own the resource: it is just like a raw pointer or a reference. In the latter case, it does own the pointer, and will call the appropriate deleter when its life-time ends.
 
 You get to the pointed-to object by calling member function `get()`. Unlike for (smart or not) pointers, it propagates `const`-ness to the pointed-to object.
 
 `optional_owner` in moveable. The moved-from `optional_owner` can be only destroyed or move-assigned to.
 
 The size of type `optional_owner<T>` is that of two pointers.
+
+`optional_owner<T, D>` supports a custom deleter as in `std::unique_ptr`. (In that case the size of `optional_owner<T, D>` may increase by the size of the deleter.)
 
 ## What for?
 
