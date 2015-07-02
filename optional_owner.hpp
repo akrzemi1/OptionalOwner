@@ -17,7 +17,7 @@ template <typename T, typename D = std::default_delete<T>>
 class optional_owner
 {
   std::unique_ptr<T, D> _ownership;
-  T*                    _access = nullptr;
+  T*                    _access;
   
 public:
   // precondition: owing_ptr != nullptr
@@ -37,7 +37,7 @@ public:
   T& get() { assert(_access); return *_access; }
   
   // precondition: *this has not been moved from
-  bool owes() const { assert(_access); return _ownership != nullptr; }
+  bool owes() const { assert(_access); return _ownership != 0; }
 };
 
 } // namespace ak_toolbox
