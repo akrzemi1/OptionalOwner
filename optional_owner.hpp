@@ -27,10 +27,6 @@ public:
 
   optional_owner(T& nonowing_ptr)
     : _ownership{}, _access{&nonowing_ptr} {}
- 
-  optional_owner(optional_owner&&) = default;
-  
-  optional_owner& operator=(optional_owner&& rhs) = default;
   
   // precondition: *this has not been moved from
   const T& get() const { assert(_access); return *_access; }
