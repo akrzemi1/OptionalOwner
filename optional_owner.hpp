@@ -11,7 +11,7 @@
 #include <memory>
 #include <utility>
 
-#if defined AK_TOOLBOX_NO_CXX11
+#if defined AK_TOOLBOX_NO_ARVANCED_CXX11
 #  define AK_TOOLBOX_NOEXCEPT
 #  define AK_TOOLBOX_CONSTEXPR
 #  define AK_TOOLBOX_EXPLICIT_CONV
