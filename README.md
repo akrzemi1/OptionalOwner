@@ -12,13 +12,13 @@ optional_owner<Iface> oi = make_iface(); // oi owns the pointer (will delete it)
 ```
 
 ## Requirements
-This is a single-header, header-only library. It requires the C++ compiler taht supports rvalue references, move semantics, `std::move` and `std::unique_ptr`. A C++11 compiler meets the requirements, but even some pre-C++11 compilers are sufficient.
+This is a single-header, header-only library. It requires the C++ compiler taht supports rvalue references, move semantics, `std::move` and `std::unique_ptr`. It requires some more C++11 stuff by default but these other things can be disabled by definin macro `AK_TOOLBOX_NO_ARVANCED_CXX11`. A C++11 compiler meets the requirements, but even some pre-C++11 compilers are sufficient.
 
 ## Overview
 
 Class template `optional_owner` has no default constructor. You initialize it by either providing a reference or a `std::unique_ptr`. In the former case the `optional_owner` doesn't own the resource: it is just like a raw pointer or a reference. In the latter case, it does own the pointer, and will call the appropriate deleter when its life-time ends.
 
-You get to the pointed-to object by calling member function `get()`. Unlike for (smart or not) pointers, it propagates `const`-ness to the pointed-to object.
+You get to the pointed-to object by pointer-like interface: contextual conversion to bool and poerators `->~ and `*`.
 
 `optional_owner` in moveable. The moved-from `optional_owner` can be only destroyed or move-assigned to.
 
