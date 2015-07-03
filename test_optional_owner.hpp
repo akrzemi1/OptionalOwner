@@ -32,6 +32,18 @@ void test_oracle()
   assert (oracle::counter == 1);
 }
 
+void test_default_ctor()
+{
+  optional_owner<oracle> ooo;
+  assert (!ooo);
+  assert (!ooo.owes());
+  
+  oracle o (1);
+  ooo = optional_owner<oracle>(o);
+  assert (ooo);
+  assert (ooo->value == 1);
+}
+
 void test_nonowing_usge()
 {
   oracle::counter = 0;
@@ -39,20 +51,25 @@ void test_nonowing_usge()
   {
     optional_owner<oracle> ooo = o;
     assert (oracle::counter == 0);
+    assert (ooo);
     assert (!ooo.owes());
-    assert (ooo.get().value == 1);
+    assert (ooo->value == 1);
     
     optional_owner<oracle> oo2 = std::move(ooo);
     assert (oracle::counter == 0);
+    assert (!ooo);
+    assert (oo2);
     assert (!oo2.owes());
-    assert (oo2.get().value == 1);
+    assert (oo2->value == 1);
     
     ooo = std::move(oo2);
+    assert (!oo2);
+    assert (ooo);
     assert (oracle::counter == 0);
     assert (!ooo.owes());
-    assert (ooo.get().value == 1);
+    assert (ooo->value == 1);
     
-    ooo.get().value = 2;
+    ooo->value = 2;
   }
   assert (oracle::counter == 0);
   assert (o.value == 2);
@@ -64,29 +81,36 @@ void test_owing_usage()
   {
     optional_owner<oracle> ooo = std::unique_ptr<oracle>(new oracle(3));
     assert (oracle::counter == 0);
+    assert (ooo);
     assert (ooo.owes());
-    assert (ooo.get().value == 3);
+    assert (ooo->value == 3);
     
-    ooo.get().value = 4;
+    ooo->value = 4;
     optional_owner<oracle> oo2 = std::move(ooo);
     assert (oracle::counter == 0);
+    assert (!ooo);
+    assert (oo2);
     assert (oo2.owes());
-    assert (oo2.get().value == 4);
+    assert (oo2->value == 4);
     
-    oo2.get().value = 5;
+    oo2->value = 5;
     ooo = std::move(oo2);
+    assert (!oo2);
+    assert (ooo);
     assert (oracle::counter == 0);
     assert (ooo.owes());
-    assert (ooo.get().value == 5);
+    assert (ooo->value == 5);
     
     {
-      optional_owner<oracle> oo3 = ooo.get();
+      optional_owner<oracle> oo3 = *ooo;
       assert (oracle::counter == 0);
+      assert (oo3);
+      assert (ooo);
       assert (!oo3.owes());
       assert (ooo.owes());
-      oo3.get().value = 6;
+      oo3->value = 6;
     }
-    assert (ooo.get().value == 6);
+    assert (ooo->value == 6);
   }
   assert (oracle::counter == 1);
 }
@@ -95,4 +119,5 @@ int main()
 {
   test_nonowing_usge();
   test_owing_usage();
+  test_default_ctor();
 }
