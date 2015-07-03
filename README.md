@@ -16,7 +16,9 @@ This is a single-header, header-only library. It requires the C++ compiler taht 
 
 ## Overview
 
-Class template `optional_owner` has no default constructor. You initialize it by either providing a reference or a `std::unique_ptr`. In the former case the `optional_owner` doesn't own the resource: it is just like a raw pointer or a reference. In the latter case, it does own the pointer, and will call the appropriate deleter when its life-time ends.
+You initialize `optional_owner` by either providing a reference or a `std::unique_ptr`. In the former case the `optional_owner` doesn't own the resource: it is just like a raw pointer or a reference. In the latter case, it does own the pointer, and will call the appropriate deleter when its life-time ends.
+
+Class template `optional_owner` also has a default constructor, for the purposes of deferred initialization. You can subsequently move-assign to it an initialized `optional_owner`.
 
 You get to the pointed-to object by pointer-like interface: contextual conversion to bool and poerators `->~ and `*`.
 
@@ -25,6 +27,8 @@ You get to the pointed-to object by pointer-like interface: contextual conversio
 The size of type `optional_owner<T>` is that of two pointers.
 
 `optional_owner<T, D>` supports a custom deleter as in `std::unique_ptr`. (In that case the size of `optional_owner<T, D>` may increase by the size of the deleter.)
+
+No relational operators are provided. Although technically possible, we see no compelling use case for them.
 
 ## What for?
 
